@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
@@ -188,14 +189,26 @@ function getScoreAndPrintTable($send_url, $cookie_file, $type)
     
     $length = count($printoutarr); 
     $count = 0;
+    $outputstr = '<meta charset="utf-8"><link rel="stylesheet" href="../assets/css/amazeui.min.css"/><style>
+        .pdf{
+            font-size:24px;
+            text-align: center;
+        }
+    </style>';
     
+        $header = '<div class="am-panel am-panel-default">
+            <div class="pdf">'.
+            getName($cookie_file).'的成绩单
+            </div>
+            <table class="am-table am-table-bordered am-table-radius am-table-striped am-u-sm-6 am-u-lg-centered"><tr>
+                <td>课程号</td><td>课程名</td><td>学分</td><td>情况</td><td>成绩</td></tr>';
         echo '<div class="am-panel am-panel-success">
             <div class="am-panel-hd">欢迎您，'.
             getName($cookie_file).'
             </div>
-            <table class="am-table am-table-bordered am-table-radius am-table-striped am-u-sm-6 am-u-lg-centered"><thead><tr>
-                <th>课程号</th><th>课程名</th><th>学分</th><th>情况</th><th>成绩</th></tr></thead><tbody>';
-                    
+            <table class="am-table am-table-bordered am-table-radius am-table-striped am-u-sm-6 am-u-lg-centered"><tr>
+                <td>课程号</td><td>课程名</td><td>学分</td><td>情况</td><td>成绩</td></tr><tbody>';
+        $outputstr = $outputstr.$header;
            
             for($i = 0; $i < $length; $i ++)
             {
@@ -203,41 +216,60 @@ function getScoreAndPrintTable($send_url, $cookie_file, $type)
                 if($count % 5 == 0)
                 {
                     echo "<td>".$printoutarr[$i]."</td></tr>";
+                    $outputstr = $outputstr."<td>".$printoutarr[$i]."</td></tr>";
                 }
                 else if($count % 5 == 1)
                 {
                     echo "<tr><td>".$printoutarr[$i]."</td>";
+                    $outputstr = $outputstr."<tr><td>".$printoutarr[$i]."</td>";
                     }
                     else {
                         echo "<td>".$printoutarr[$i]."</td>";
+                        $outputstr = $outputstr."<td>".$printoutarr[$i]."</td>";
                     }
                 }
                 
-                echo "</tbody></table>";
+                echo "</table>";
+                $outputstr = $outputstr."</table>";
                 
                 if($type == 0)
                 {
                     echo '</div><h3 class="am-u-sm-centered">加权平均分为'.$avg.'</h3>';
-                    echo '<h3 class="am-u-sm-centered">GPA分数为'.$GPA.'</h3>';    
+                    echo '<h3 class="am-u-sm-centered">GPA分数为'.$GPA.'</h3>';
+                    $outputstr = $outputstr.'</div><br /><h3 class="am-u-sm-centered">加权平均分为'.$avg.'</h3>';
+                    $outputstr = $outputstr.'<h3 class="am-u-sm-centered">GPA分数为'.$GPA.'</h3>';
                 }
                 
                 echo '</div><br /><br /><hr>';
+                $outputstr = $outputstr.'</div><br /><br /><hr>';
+    
+                $_SESSION['filesaveData'] = $outputstr;
                 
                 $htmlparser->clear();
 }
 
-function getAllSemesters($cookie_file)
+function getAllSemesters($cookie_file, $zjh)
 {
     $send_url='http://202.115.47.141/gradeLnAllAction.do?type=ln&oper=sxinfo&lnsxdm=001#qb_001?type=ln&oper=sxinfo&lnsxdm=001#qb_001';
-    getScoreAndPrintTable($send_url, $cookie_file, 0);    
+    getScoreAndPrintTable($send_url, $cookie_file, 0);
+    printScoreResult($zjh);
 }
 
-function getThisSemester($cookie_file)
+function getThisSemester($cookie_file, $zjh)
 {
     $send_url = "http://202.115.47.141/bxqcjcxAction.do";  
     getScoreAndPrintTable($send_url, $cookie_file, 1);
+    printScoreResult($zjh);
 }
 
+
+function printScoreResult($zjh)
+{
+    echo '<form action="savePage.php" method="post">';
+    echo '<input type="hidden" name="zjh" value="'.$zjh.'">';
+    echo '<input type="submit" value="存为PDF">';
+    echo '</form>'; 
+}
 
 /*set the option of the curl function */
 $zjh = $_POST['zjh'];
@@ -249,9 +281,9 @@ $cookie = getCookie($zjh, $mm);
 
 
 if($scorechecktype == 'allsem')
-    getAllSemesters($cookie);
+    getAllSemesters($cookie, $zjh);
 else
-    getThisSemester($cookie);
+    getThisSemester($cookie, $zjh);
 
 
 unlink($cookie);
