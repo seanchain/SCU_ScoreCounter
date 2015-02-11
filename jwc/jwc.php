@@ -27,6 +27,37 @@
         window.location.href = "./register.php"
     }
     </script>
+       <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-ui-1.8.17.custom.min.js"></script>
+    <script type="text/javascript" src="js/jspdf.min.js"></script>
+    <script type="text/javascript" src="libs/Deflate/adler32cs.js"></script>
+    <script type="text/javascript" src="libs/FileSaver.js/FileSaver.js"></script>
+    <script type="text/javascript" src="libs/Blob.js/BlobBuilder.js"></script>
+    <script type="text/javascript" src="js/jspdf.plugin.addimage.js"></script>
+    <script type="text/javascript" src="js/jspdf.plugin.standard_fonts_metrics.js"></script>
+    <script type="text/javascript" src="js/jspdf.plugin.split_text_to_size.js"></script>
+    <script type="text/javascript" src="js/jspdf.plugin.from_html.js"></script>
+    <script type="text/javascript" src="js/basic.js"></script>
+  <script type="text/javascript">
+  $(function () {
+
+    var specialElementHandlers = {
+        '#editor': function (element,renderer) {
+            return true;
+        }
+    };
+ $('#cmd').click(function () {
+        //alert("hello");
+        var doc = new jsPDF();
+        doc.fromHTML($('#target').html(), 15, 15, {
+            'width': 170,'elementHandlers': specialElementHandlers
+        });
+        doc.save('./sample-file.pdf');
+    });  
+});
+
+
+  </script>
 </head>
 <body>
     <div class="header">
@@ -229,7 +260,7 @@ function getScoreAndPrintTable($send_url, $cookie_file, $type)
 function getAllSemesters($cookie_file)
 {
     $send_url='http://202.115.47.141/gradeLnAllAction.do?type=ln&oper=sxinfo&lnsxdm=001#qb_001?type=ln&oper=sxinfo&lnsxdm=001#qb_001';
-    getScoreAndPrintTable($send_url, $cookie_file, 0);    
+    getScoreAndPrintTable($send_url, $cookie_file, 0); 
 }
 
 function getThisSemester($cookie_file)
