@@ -240,7 +240,7 @@ function getScoreAndPrintTable($send_url, $cookie_file, $type)
                     $outputstr = $outputstr.'<h3 class="am-u-sm-centered">GPA分数为'.$GPA.'</h3>';
                 }
                 
-                echo '</div><br /><br /><hr>';
+                echo '</div>';
                 $outputstr = $outputstr.'</div><br /><br /><hr>';
     
                 $_SESSION['filesaveData'] = $outputstr;
@@ -267,8 +267,9 @@ function printScoreResult($zjh)
 {
     echo '<form action="savePage.php" method="post">';
     echo '<input type="hidden" name="zjh" value="'.$zjh.'">';
-    echo '<input type="submit" value="存为PDF">';
+    echo '<div align="center"><input type="submit" class="am-btn-primary am-round" value="存为PDF"></div>';
     echo '</form>'; 
+    echo '<br /><br /><hr>';
 }
 
 /*set the option of the curl function */
