@@ -267,7 +267,7 @@ function printScoreResult($zjh)
 {
     echo '<form action="savePage.php" method="post">';
     echo '<input type="hidden" name="zjh" value="'.$zjh.'">';
-    echo '<div align="center"><input type="submit" class="am-btn-primary am-round" value="存为PDF"></div>';
+    echo '<div align="center"><input class="am-btn-primary am-radius" type="submit" value="存为PDF"></div>';
     echo '</form>'; 
     echo '<br /><br /><hr>';
 }
