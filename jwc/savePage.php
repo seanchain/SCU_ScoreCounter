@@ -20,7 +20,7 @@ fclose($file);
 echo "<meta charset=\"utf-8\">";
 echo "<h1>正在生成您的PDF文件，请稍等</h1>";
 
-$fn = sha1($zjh)."_score.pdf";
+$fn = sha1($zjh).".pdf";
 
 convert($fn, $zjh);
 unlink($filesaveDir); //此时删除掉html文件
