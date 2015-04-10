@@ -32,12 +32,18 @@ fclose($file);
 echo "<meta charset=\"utf-8\">";
 echo "<h1>正在生成您的PDF文件，请稍等</h1>";
 
-$fn = md5(sha1($zjh)).".pdf";
+$fn = $zjh.".pdf";
 
 convert($fn, $zjh);
 unlink($filesaveDir); //此时删除掉html文件
 
-echo '<script>window.location.href="http://www.chensihang.com/data/'.$fn.'"</script>';
+$file_url = 'http://www.chensihang.com/data/'.$fn;
+header('Content-Type: application/octet-stream');
+header("Content-Transfer-Encoding: Binary");
+header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\"");
+readfile($file_url); // do the double-download-dance (dirty but worky)
+$file_pdf = "../data/".$zjh.".pdf";
+unlink($file_pdf);
 
 ?>
 
